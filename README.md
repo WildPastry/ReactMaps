@@ -1,5 +1,5 @@
-# ReactMap
-Google maps powered with React.
+# ReactMaps
+Google maps powered by React.
 
 ## Development info
 
