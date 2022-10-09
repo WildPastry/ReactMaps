@@ -1,13 +1,19 @@
-import React from 'react';
-import { Map, GoogleApiWrapper } from 'google-maps-react';
-import { InfoWindow, Marker } from 'google-maps-react';
+import {
+  GoogleApiWrapper,
+  IMapProps,
+  InfoWindow,
+  Map,
+  Marker
+} from 'google-maps-react';
 import GoogleKey from './config.json';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const GKEY = GoogleKey.GKEY;
 
 const mapStyles = {
   width: '100%',
-  height: '100%',
+  height: '100%'
 };
 
 const googleMapStyles = [
@@ -15,230 +21,257 @@ const googleMapStyles = [
     elementType: 'geometry',
     stylers: [
       {
-        color: '#212121',
-      },
-    ],
+        color: '#212121'
+      }
+    ]
   },
   {
     elementType: 'labels',
     stylers: [
       {
-        visibility: 'off',
-      },
-    ],
+        visibility: 'off'
+      }
+    ]
   },
   {
     elementType: 'labels.icon',
     stylers: [
       {
-        visibility: 'off',
-      },
-    ],
+        visibility: 'off'
+      }
+    ]
   },
   {
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#757575',
-      },
-    ],
+        color: '#757575'
+      }
+    ]
   },
   {
     elementType: 'labels.text.stroke',
     stylers: [
       {
-        color: '#212121',
-      },
-    ],
+        color: '#212121'
+      }
+    ]
   },
   {
     featureType: 'administrative',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#757575',
-      },
-    ],
+        color: '#757575'
+      }
+    ]
   },
   {
     featureType: 'administrative.country',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#9e9e9e',
-      },
-    ],
+        color: '#9e9e9e'
+      }
+    ]
   },
   {
     featureType: 'administrative.land_parcel',
     stylers: [
       {
-        visibility: 'off',
-      },
-    ],
+        visibility: 'off'
+      }
+    ]
   },
   {
     featureType: 'administrative.locality',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#bdbdbd',
-      },
-    ],
+        color: '#bdbdbd'
+      }
+    ]
   },
   {
     featureType: 'administrative.neighborhood',
     stylers: [
       {
-        visibility: 'off',
-      },
-    ],
+        visibility: 'off'
+      }
+    ]
   },
   {
     featureType: 'poi',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#757575',
-      },
-    ],
+        color: '#757575'
+      }
+    ]
   },
   {
     featureType: 'poi.park',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#181818',
-      },
-    ],
+        color: '#181818'
+      }
+    ]
   },
   {
     featureType: 'poi.park',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#616161',
-      },
-    ],
+        color: '#616161'
+      }
+    ]
   },
   {
     featureType: 'poi.park',
     elementType: 'labels.text.stroke',
     stylers: [
       {
-        color: '#1b1b1b',
-      },
-    ],
+        color: '#1b1b1b'
+      }
+    ]
   },
   {
     featureType: 'road',
     elementType: 'geometry.fill',
     stylers: [
       {
-        color: '#2c2c2c',
-      },
-    ],
+        color: '#2c2c2c'
+      }
+    ]
   },
   {
     featureType: 'road',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#8a8a8a',
-      },
-    ],
+        color: '#8a8a8a'
+      }
+    ]
   },
   {
     featureType: 'road.arterial',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#373737',
-      },
-    ],
+        color: '#373737'
+      }
+    ]
   },
   {
     featureType: 'road.highway',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#3c3c3c',
-      },
-    ],
+        color: '#3c3c3c'
+      }
+    ]
   },
   {
     featureType: 'road.highway.controlled_access',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#4e4e4e',
-      },
-    ],
+        color: '#4e4e4e'
+      }
+    ]
   },
   {
     featureType: 'road.local',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#616161',
-      },
-    ],
+        color: '#616161'
+      }
+    ]
   },
   {
     featureType: 'transit',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#757575',
-      },
-    ],
+        color: '#757575'
+      }
+    ]
   },
   {
     featureType: 'water',
     elementType: 'geometry',
     stylers: [
       {
-        color: '#000000',
-      },
-    ],
+        color: '#000000'
+      }
+    ]
   },
   {
     featureType: 'water',
     elementType: 'labels.text.fill',
     stylers: [
       {
-        color: '#3d3d3d',
-      },
-    ],
-  },
+        color: '#3d3d3d'
+      }
+    ]
+  }
 ];
 
 export class MapContainer extends React.Component {
   state = {
-    showingInfoWindow: false, // Hides or the shows the infoWindow
-    activeMarker: {}, // Shows the active marker upon click
-    selectedPlace: {}, // Shows the infoWindow to the selected place upon a marker
+    showingInfoWindow: false,
+    activeMarker: {},
+    selectedPlace: {}
   };
 
-  onMarkerClick = (props, marker, e) =>
-    this.setState({
-      selectedPlace: props,
-      activeMarker: marker,
-      showingInfoWindow: true,
-    });
+  onMarkerClick = (props: any, marker: any) => this.setState({
+    selectedPlace: props,
+    activeMarker: marker,
+    showingInfoWindow: true
+  });
 
-  onClose = (props) => {
+  onClose = () => {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
-        activeMarker: null,
+        activeMarker: null
       });
     }
   };
 
-  _mapLoaded(mapProps, map) {
+  _mapLoaded(
+    mapProps: IMapProps | undefined,
+    map: {
+      setOptions: (arg0: {
+        styles: (
+          | {
+              elementType: string;
+              stylers: { color: string }[];
+              featureType?: undefined;
+            }
+          | {
+              elementType: string;
+              stylers: { visibility: string }[];
+              featureType?: undefined;
+            }
+          | {
+              featureType: string;
+              elementType: string;
+              stylers: { color: string }[];
+            }
+          | {
+              featureType: string;
+              stylers: { visibility: string }[];
+              elementType?: undefined;
+            }
+        )[];
+      }) => void;
+    }
+  ) {
     map.setOptions({
-      styles: googleMapStyles,
+      styles: googleMapStyles
     });
   }
 
@@ -252,7 +285,7 @@ export class MapContainer extends React.Component {
           onReady={(mapProps, map) => this._mapLoaded(mapProps, map)}
           initialCenter={{
             lat: -41.2865,
-            lng: 174.7762,
+            lng: 174.7762
           }}>
           <Marker onClick={this.onMarkerClick} name={'Wellington, NZ'} />
           <InfoWindow
@@ -270,5 +303,5 @@ export class MapContainer extends React.Component {
 }
 
 export default GoogleApiWrapper({
-  apiKey: GKEY,
+  apiKey: GKEY
 })(MapContainer);
