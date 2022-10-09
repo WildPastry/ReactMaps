@@ -1,76 +1,274 @@
-import React, { Component } from 'react';
-
+import React from 'react';
 import { Map, GoogleApiWrapper } from 'google-maps-react';
 import { InfoWindow, Marker } from 'google-maps-react';
+import GoogleKey from './config.json';
 
-import GoogleKey from './config.json'
-var GKEY = GoogleKey.GKEY;
+const GKEY = GoogleKey.GKEY;
 
-   const mapStyles = {
+const mapStyles = {
   width: '100%',
-  height: '100%'
+  height: '100%',
 };
 
-const stylesArr = [{"featureType":"all","elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#000000"},{"lightness":40}]},{"featureType":"all","elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#000000"},{"lightness":16}]},{"featureType":"all","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":17},{"weight":1.2}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":20}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":21}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#000000"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#000000"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":16}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":19}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#000000"},{"lightness":17}]}];
+const googleMapStyles = [
+  {
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    elementType: 'labels',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    elementType: 'labels.icon',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    elementType: 'labels.text.stroke',
+    stylers: [
+      {
+        color: '#212121',
+      },
+    ],
+  },
+  {
+    featureType: 'administrative',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    featureType: 'administrative.country',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#9e9e9e',
+      },
+    ],
+  },
+  {
+    featureType: 'administrative.land_parcel',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'administrative.locality',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#bdbdbd',
+      },
+    ],
+  },
+  {
+    featureType: 'administrative.neighborhood',
+    stylers: [
+      {
+        visibility: 'off',
+      },
+    ],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#181818',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#616161',
+      },
+    ],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.stroke',
+    stylers: [
+      {
+        color: '#1b1b1b',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.fill',
+    stylers: [
+      {
+        color: '#2c2c2c',
+      },
+    ],
+  },
+  {
+    featureType: 'road',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#8a8a8a',
+      },
+    ],
+  },
+  {
+    featureType: 'road.arterial',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#373737',
+      },
+    ],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#3c3c3c',
+      },
+    ],
+  },
+  {
+    featureType: 'road.highway.controlled_access',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#4e4e4e',
+      },
+    ],
+  },
+  {
+    featureType: 'road.local',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#616161',
+      },
+    ],
+  },
+  {
+    featureType: 'transit',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#757575',
+      },
+    ],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [
+      {
+        color: '#000000',
+      },
+    ],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [
+      {
+        color: '#3d3d3d',
+      },
+    ],
+  },
+];
 
-export class MapContainer extends Component {
- 
-   state = {
-    showingInfoWindow: false,  //Hides or the shows the infoWindow
-    activeMarker: {},          //Shows the active marker upon click
-    selectedPlace: {}          //Shows the infoWindow to the selected place upon a marker
+export class MapContainer extends React.Component {
+  state = {
+    showingInfoWindow: false, // Hides or the shows the infoWindow
+    activeMarker: {}, // Shows the active marker upon click
+    selectedPlace: {}, // Shows the infoWindow to the selected place upon a marker
   };
 
   onMarkerClick = (props, marker, e) =>
     this.setState({
       selectedPlace: props,
       activeMarker: marker,
-      showingInfoWindow: true
+      showingInfoWindow: true,
     });
 
-  onClose = props => {
+  onClose = (props) => {
     if (this.state.showingInfoWindow) {
       this.setState({
         showingInfoWindow: false,
-        activeMarker: null
+        activeMarker: null,
       });
     }
   };
- 
+
+  _mapLoaded(mapProps, map) {
+    map.setOptions({
+      styles: googleMapStyles,
+    });
+  }
+
   render() {
     return (
       <div>
-      <Map
-        google={this.props.google}
-        zoom={8}
-        style={mapStyles}
-        options={stylesArr}
-        initialCenter={{
-         lat: -41.2865,
-         lng: 174.7762
-        }}
-      >
-      <Marker
-          onClick={this.onMarkerClick}
-          name={'Wellington, NZ'}
-        /> 
-        <InfoWindow
-          marker={this.state.activeMarker}
-          visible={this.state.showingInfoWindow}
-          onClose={this.onClose}
-        >
-          <div>
-            <h4>{this.state.selectedPlace.name}</h4>
-          </div>
-        </InfoWindow>
-      </Map>
+        <Map
+          google={this.props.google}
+          zoom={8}
+          style={mapStyles}
+          onReady={(mapProps, map) => this._mapLoaded(mapProps, map)}
+          initialCenter={{
+            lat: -41.2865,
+            lng: 174.7762,
+          }}>
+          <Marker onClick={this.onMarkerClick} name={'Wellington, NZ'} />
+          <InfoWindow
+            marker={this.state.activeMarker}
+            visible={this.state.showingInfoWindow}
+            onClose={this.onClose}>
+            <div>
+              <h4>{this.state.selectedPlace.name}</h4>
+            </div>
+          </InfoWindow>
+        </Map>
       </div>
     );
   }
 }
 
 export default GoogleApiWrapper({
- 
-    apiKey: GKEY
-  
-  })(MapContainer);
+  apiKey: GKEY,
+})(MapContainer);
