@@ -1,12 +1,10 @@
 import {
   GoogleApiWrapper,
-  IMapProps,
   InfoWindow,
   Map,
   Marker
 } from 'google-maps-react';
 import GoogleKey from './config.json';
-import PropTypes from 'prop-types';
 import React from 'react';
 
 const GKEY = GoogleKey.GKEY;
@@ -241,35 +239,7 @@ export class MapContainer extends React.Component {
     }
   };
 
-  _mapLoaded(
-    mapProps: IMapProps | undefined,
-    map: {
-      setOptions: (arg0: {
-        styles: (
-          | {
-              elementType: string;
-              stylers: { color: string }[];
-              featureType?: undefined;
-            }
-          | {
-              elementType: string;
-              stylers: { visibility: string }[];
-              featureType?: undefined;
-            }
-          | {
-              featureType: string;
-              elementType: string;
-              stylers: { color: string }[];
-            }
-          | {
-              featureType: string;
-              stylers: { visibility: string }[];
-              elementType?: undefined;
-            }
-        )[];
-      }) => void;
-    }
-  ) {
+  _mapLoaded(map: any) {
     map.setOptions({
       styles: googleMapStyles
     });
